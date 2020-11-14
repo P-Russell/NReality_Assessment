@@ -1,57 +1,28 @@
 import json
-import xmltodict
-from urllib.request import Request, urlopen
 from urllib.error import HTTPError
-from os import environ
-import boto3
 from botocore.exceptions import ClientError
+from helpers import *
+import logging
 
-
-dynamodb = boto3.resource('dynamodb', region_name=environ['REGION'])
-table = dynamodb.Table(environ['DYNAMODB_TABLE'])
-
-github_url = 'https://github.com'
 
 def feed(event, context):
-    try: 
-        github_handle =  event['pathParameters']['handle']
-        req = Request( github_url + '/' + github_handle)
-        req.add_header('Accept', 'application/atom+xml')
+    try:
+        github_handle = event['body']['handle']
+        show_read_later = event['body']['read_later']
 
-        content = urlopen(req).read()
+        all_entries = fetch_github_feed_entries(github_handle)
+        read_later_list = fetch_read_later_list(github_handle)
 
-        parsed_content = xmltodict.parse(content)
-
-        response = table.get_item(Key = {'github_handle': github_handle})
-        if 'Item' not in response:
-            table.put_item(Item={
-                'github_handle': github_handle,
-                'read_later': []
-            })
+        if type(read_later_list) == list:
+            entries = response_entries(
+                all_entries, read_later_list, show_read_later)
         else:
-            for id in response['Item']['read_later']:
-                # Perfrom some filtering
-
-
-
-        # try:
-        #     print('Found ITEM')
-        #     print(query['Item'])
-        # except ClientError as e:
-        #     print(e.response['Error']['Code'])
-
-        # except dynamodb.Client.exceptions.ResourceNotFoundException as e:
-        #     print('Createing new entry')
-        #     table.put_item(Item={
-        #         'github_handle': github_handle,
-        #         'read_later': []
-        #     })
-
-
+            create_table_entry(github_handle)
+            entries = all_entries
 
         return {
             'statusCode': 200,
-            'body': json.dumps(parsed_content['feed']['entry'])
+            'body': json.dumps(entries)
         }
 
     except HTTPError as e:
@@ -60,6 +31,7 @@ def feed(event, context):
             'reason': e.reason,
         }
     except Exception as e:
+        logging.error(e)
         return {
             'statusCode': 500,
             'body': 'internal server error'
@@ -67,20 +39,19 @@ def feed(event, context):
 
 
 def read_later(event, context):
-    '''
-    y
-    '''
-    ad_id = event['body']['id']
-    user_handel = event['body']['id']
+    try:
+        entry_id = event['body']['entry_id']
+        github_handle = event['body']['handle']
 
-    body = {
-        'message': 'Go Serverless v1.0! Your function executed successfully!',
-        'input': event
-    }
+        add_to_read_later_list(github_handle, entry_id)
 
-    response = {
-        'statusCode': 200,
-        'body': json.dumps(body)
-    }
-
-    return response
+        return {
+            'statusCode': 200,
+            'body': entry_id
+        }
+    except Exception as e:
+        logging.error(e)
+        return {
+            'statusCode': 500,
+            'body': 'internal server error'
+        }
