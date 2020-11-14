@@ -17,6 +17,7 @@ provider:
 plugins:
   - serverless-prune-plugin
   - serverless-offline
+  - serverless-python-requirements
 
 
 package:
@@ -30,15 +31,17 @@ package:
     - package-lock.json
     - requirements.txt
     - venv/**
+    - mocks/**
+    - aws-resources
+    - .serverless/**
+    - .gitignore
 
 
 custom:
   stage: ${opt:stage, self:provider.stage}
   tableName: read_later
   pythonRequirements:
-    noDeploy:
-      - botocore==1.17.8
-      - boto3==1.14.8
+    pythonBin: venv/bin/python
   prune:
     automatic: true
     number: 3
@@ -49,15 +52,15 @@ functions:
     handler: handler.feed
     events:
       - http:
-          path: feed/{handle}
-          method: get
+          path: feed
+          method: post
 
   read_later:
     handler: handler.read_later
     events:
       - http:
           path: read-later
-          method: get
+          method: post
 
 
 resources:
