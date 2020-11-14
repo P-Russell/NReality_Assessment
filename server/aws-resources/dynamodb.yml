@@ -1,0 +1,12 @@
+Resources:
+  ReadLaterTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ${self:custom.tableName}
+      AttributeDefinitions:
+        - AttributeName: github_handle
+          AttributeType: S
+      KeySchema:
+        - AttributeName: github_handle
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
