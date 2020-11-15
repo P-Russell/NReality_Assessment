@@ -4,6 +4,7 @@ export class API {
   endpointUrl = 'https://wycxhkur4i.execute-api.af-south-1.amazonaws.com/dev/'
 
   async fetchFeed(githubHandle, readLater = false) {
+    console.log('Fetch Feed API called')
     const data = { handle: githubHandle, read_later: readLater }
     const response = await fetch(this.endpointUrl + 'feed', {
       method: 'POST',

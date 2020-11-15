@@ -47,9 +47,7 @@
 
 <script>
 export default {
-  mounted() {
-    console.log(this.$route)
-  },
+  name: 'NavBar',
 }
 </script>
 

@@ -4,15 +4,16 @@
       <div class="col-12 text-center py-3">
         <h3 class="text-muted">{{ $route.params.feed }}'s Current Feed</h3>
       </div>
+      <Alert v-if="error" type="danger">{{ error }}</Alert>
       <FeedList
-        v-if="entries && entries.length"
+        v-else-if="entries !== '__LOADING__' && entries.length"
         :entries="entries"
         class="col col-12 col-lg-8"
       />
-      <Alert v-else-if="error" type="danger">{{ error }}</Alert>
-      <Spinner v-else-if="loading" :size="3" class="mt-4" />
-
-      <Alert v-else-if="entries && entries.length === 0" type="info"
+      <Spinner v-else-if="entries === '__LOADING__'" :size="3" class="mt-4" />
+      <Alert
+        v-else-if="entries !== '__LOADING__' && entries.length === 0"
+        type="info"
         >No entries for {{ $route.params.feed }} found</Alert
       >
     </div>
@@ -30,19 +31,22 @@ export default {
   components: { FeedList, Spinner, Alert },
   data() {
     return {
-      entries: null,
       error: null,
-      loading: false,
     }
+  },
+  computed: {
+    entries() {
+      return this.$store.getters.entries
+    },
   },
   async mounted() {
     try {
-      this.loading = true
-      this.entries = await this.$api.fetchFeed(this.$route.params.feed, false)
+      await this.$store.dispatch('fetchEntries', {
+        handle: this.$route.params.feed,
+        readLater: false,
+      })
     } catch (e) {
       this.error = 'User Not Found'
-    } finally {
-      this.loading = false
     }
   },
 }
