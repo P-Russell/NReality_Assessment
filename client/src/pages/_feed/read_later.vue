@@ -1,9 +1,45 @@
 <template>
-  <div>Read Later {{ this.$route.params.feed }}</div>
+  <div class="container">
+    <div class="row justify-content-center">
+      <FeedList
+        v-if="entries && entries.length"
+        :entries="entries"
+        class="col col-12 col-lg-8"
+      />
+      <Alert v-else-if="error" type="danger">{{ error }}</Alert>
+      <Spinner v-else-if="loading" :size="3" class="mt-4" />
+
+      <Alert v-else-if="entries && entries.length === 0" type="info"
+        >No entries for {{ $route.params.feed }} found</Alert
+      >
+    </div>
+  </div>
 </template>
 
 <script>
-export default {}
-</script>
+import FeedList from '~/components/feed_list'
+import Spinner from '~/components/spinner'
+import Alert from '~/components/alert'
 
-<style></style>
+export default {
+  name: 'ReadLater',
+  components: { FeedList, Spinner, Alert },
+  data() {
+    return {
+      entries: null,
+      error: null,
+      loading: false,
+    }
+  },
+  async mounted() {
+    try {
+      this.loading = true
+      this.entries = await this.$api.fetchFeed(this.$route.params.feed, true)
+    } catch (e) {
+      this.error = 'User Not Found'
+    } finally {
+      this.loading = false
+    }
+  },
+}
+</script>
