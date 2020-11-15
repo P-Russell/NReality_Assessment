@@ -23,6 +23,7 @@ import Alert from '~/components/alert'
 
 export default {
   name: 'ReadLater',
+  layout: 'results',
   components: { FeedList, Spinner, Alert },
   data() {
     return {

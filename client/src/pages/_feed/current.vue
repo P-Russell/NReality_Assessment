@@ -23,6 +23,7 @@ import Alert from '~/components/alert'
 
 export default {
   name: 'ReadCurrent',
+  layout: 'results',
   components: { FeedList, Spinner, Alert },
   data() {
     return {
