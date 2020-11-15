@@ -42,3 +42,14 @@ def response_entries(all_entries, read_later, include_read_later):
         return list(filter(lambda entry : entry['id'] in read_later, all_entries))
     else:
         return list(filter(lambda entry : not (entry['id'] in read_later), all_entries))
+
+
+def response(code, body):
+    return {
+        'headers': {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': True,
+        },
+        'statusCode': code,
+        'body': body
+    }

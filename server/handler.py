@@ -21,34 +21,14 @@ def feed(event, context):
             create_table_entry(github_handle)
             entries = all_entries
 
-        return {
-            'statusCode': 200,
-            'headers': {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Credentials': True,
-            },
-            'body': json.dumps(entries)
-        }
+        return response(code=200, body=json.dumps(entries))
 
     except HTTPError as e:
-        return {
-            'headers': {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Credentials': True,
-            },
-            'statusCode': e.code,
-            'reason': e.reason,
-        }
+        logging.error(e)
+        return response(code=e.code, body=e.reason)
     except Exception as e:
         logging.error(e)
-        return {
-            'headers': {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Credentials': True,
-            },
-            'statusCode': 500,
-            'body': 'internal server error'
-        }
+        return response(code=500, body='internal server error')
 
 
 def read_later(event, context):
@@ -58,21 +38,7 @@ def read_later(event, context):
 
         add_to_read_later_list(github_handle, entry_id)
 
-        return {
-            'headers': {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Credentials': True,
-            },
-            'statusCode': 200,
-            'body': entry_id
-        }
+        return response(code=200, body=entry_id)
     except Exception as e:
         logging.error(e)
-        return {
-            'headers': {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Credentials': True,
-            },
-            'statusCode': 500,
-            'body': 'internal server error'
-        }
+        return response(code=500, body='internal server error')
