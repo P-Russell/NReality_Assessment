@@ -23,6 +23,9 @@
               >Read Later List</NuxtLink
             >
           </li>
+          <li class="nav-item">
+            <NuxtLink class="nav-link" :to="`/`">Home</NuxtLink>
+          </li>
         </b-navbar-nav>
 
         <b-navbar-nav class="ml-auto">
@@ -30,7 +33,7 @@
             <b-form-input
               size="sm"
               class="mr-sm-2"
-              placeholder="Search"
+              placeholder="Search Feed"
             ></b-form-input>
             <b-button size="sm" class="my-2 my-sm-0" type="submit"
               >Search</b-button

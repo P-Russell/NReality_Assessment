@@ -1,6 +1,9 @@
 <template>
   <div class="container">
     <div class="row justify-content-center">
+      <div class="col-12 text-center py-3">
+        <h3 class="text-muted">{{ $route.params.feed }}'s Read Later List</h3>
+      </div>
       <FeedList
         v-if="entries && entries.length"
         :entries="entries"
