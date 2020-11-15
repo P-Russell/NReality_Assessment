@@ -12,6 +12,7 @@ export const mutations = {
     state.entries = entries
   },
   removeEntry(state, entryId) {
+    console.log('alling remove entry')
     state.entries = state.entries.filter((entry) => entry.id !== entryId)
   },
 }
@@ -29,7 +30,9 @@ export const actions = {
     commit('setEntries', entries)
   },
   async setReadLater({ commit }, data) {
-      await api.addToReadLater(data.handle, data.entryId)
-      commit('removeEntry', entryId)
-  }
+    console.log('Calling set read later store')
+    await api.addToReadLater(data.handle, data.entryId)
+    console.log('After api call')
+    commit('removeEntry', data.entryId)
+  },
 }

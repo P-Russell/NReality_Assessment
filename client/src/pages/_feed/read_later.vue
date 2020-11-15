@@ -4,7 +4,7 @@
       <div class="col-12 text-center py-3">
         <h3 class="text-muted">{{ $route.params.feed }}'s Read Later List</h3>
       </div>
-      <Alert v-if="error" type="danger">{{ error }}</Alert>
+      <Alert v-if="error" class="col col-12" type="danger">{{ error }}</Alert>
       <FeedList
         v-else-if="entries !== '__LOADING__' && entries.length"
         :entries="entries"
@@ -14,6 +14,7 @@
       <Alert
         v-else-if="entries !== '__LOADING__' && entries.length === 0"
         type="info"
+        class="col col-12"
         >No entries for {{ $route.params.feed }} found</Alert
       >
     </div>

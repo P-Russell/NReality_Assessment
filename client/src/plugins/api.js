@@ -4,7 +4,6 @@ export class API {
   endpointUrl = 'https://wycxhkur4i.execute-api.af-south-1.amazonaws.com/dev/'
 
   async fetchFeed(githubHandle, readLater = false) {
-    console.log('Fetch Feed API called')
     const data = { handle: githubHandle, read_later: readLater }
     const response = await fetch(this.endpointUrl + 'feed', {
       method: 'POST',
@@ -18,7 +17,7 @@ export class API {
 
   async addToReadLater(githubHandle, entryId) {
     const data = { handle: githubHandle, entry_id: entryId }
-    const response = await fetch(this.endpointUrl, {
+    const response = await fetch(this.endpointUrl + 'read-later', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

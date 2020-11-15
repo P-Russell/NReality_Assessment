@@ -2,6 +2,7 @@ import xmltodict
 from urllib.request import Request, urlopen
 import boto3
 from os import environ
+import json
 
 
 dynamodb = boto3.resource('dynamodb', region_name=environ['REGION'])
@@ -51,5 +52,5 @@ def response(code, body):
             'Access-Control-Allow-Credentials': True,
         },
         'statusCode': code,
-        'body': body
+        'body': json.dumps(body)
     }

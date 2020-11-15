@@ -21,7 +21,7 @@ def feed(event, context):
             create_table_entry(github_handle)
             entries = all_entries
 
-        return response(code=200, body=json.dumps(entries))
+        return response(code=200, body=entries)
 
     except HTTPError as e:
         logging.error(e)
@@ -33,8 +33,9 @@ def feed(event, context):
 
 def read_later(event, context):
     try:
-        entry_id = event['body']['entry_id']
-        github_handle = event['body']['handle']
+        post_body = json.loads(event['body'])
+        github_handle = post_body['handle'].lower()
+        entry_id = post_body['entry_id']
 
         add_to_read_later_list(github_handle, entry_id)
 

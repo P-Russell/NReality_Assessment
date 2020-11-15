@@ -4,9 +4,21 @@
       class="card-body feed-html-container"
       v-html="entry.content['#text']"
     />
+    <div v-if="error" class="text-danger ml-3">{{ error }}</div>
     <div class="p-3">
-      <button type="button" class="btn btn-primary float-right">
-        Read Later
+      <button
+        type="button"
+        class="btn btn-primary float-right read-later-button"
+        :disabled="loading"
+        @click="readLater"
+      >
+        <span v-if="!loading">Read Later</span>
+        <span
+          v-else
+          class="spinner-grow spinner-grow-sm"
+          role="status"
+          aria-hidden="true"
+        ></span>
       </button>
     </div>
   </div>
@@ -15,14 +27,41 @@
 <script>
 export default {
   name: 'FeedItem',
+  data() {
+    return {
+      loading: false,
+      error: null,
+    }
+  },
   props: {
     entry: {
       type: Object,
       required: true,
     },
   },
+  methods: {
+    async readLater() {
+      try {
+        this.loading = true
+        await this.$store.dispatch('setReadLater', {
+          handle: this.$route.params.feed,
+          entryId: this.entry.id,
+        })
+      } catch {
+        this.error = 'Request Failed'
+      } finally {
+        this.loading = false
+      }
+    },
+  },
 }
 </script>
+
+<style scoped>
+.read-later-button {
+  width: 12rem;
+}
+</style>
 
 <style scoped>
 .feed-html-container {
