@@ -18,8 +18,8 @@ def fetch_github_feed_entries(github_handle):
 
 def create_table_entry(github_handle):
     table.put_item(Item={
-        github_handle: github_handle,
-        read_later: []
+        'github_handle': github_handle,
+        'read_later': []
     })
 
 

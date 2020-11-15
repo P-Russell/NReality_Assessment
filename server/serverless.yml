@@ -54,6 +54,7 @@ functions:
       - http:
           path: feed
           method: post
+          cors: true
 
   read_later:
     handler: handler.read_later
@@ -61,7 +62,7 @@ functions:
       - http:
           path: read-later
           method: post
-
+          cors: true
 
 resources:
   - ${file(aws-resources/dynamodb.yml)}
