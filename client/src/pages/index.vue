@@ -47,6 +47,9 @@ export default {
       submitted: false,
     }
   },
+  mounted() {
+    this.$store.commit('setEntries', '__LOADING__')
+  },
   methods: {
     go() {
       this.submitted = true

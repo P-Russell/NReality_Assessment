@@ -12,6 +12,9 @@ export class API {
       },
       body: JSON.stringify(data),
     })
+    if (!response.ok) {
+      throw new Error('Fetch failed')
+    }
     return response.json()
   }
 
@@ -24,6 +27,9 @@ export class API {
       },
       body: JSON.stringify(data),
     })
+    if (!response.ok) {
+      throw new Error('Update failed')
+    }
     return response.json()
   }
 }
