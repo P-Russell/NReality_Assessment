@@ -5,6 +5,7 @@ const api = new API()
 export const state = () => ({
   entries: '__LOADING__',
   filter: null,
+  applyFilter: false,
 })
 
 export const mutations = {
@@ -12,13 +13,25 @@ export const mutations = {
     state.entries = entries
   },
   removeEntry(state, entryId) {
-    console.log('alling remove entry')
     state.entries = state.entries.filter((entry) => entry.id !== entryId)
+  },
+  setFilter(state, value) {
+    state.filter = value
+  },
+  setApplyFilter(state, value) {
+    state.applyFilter = value
   },
 }
 
 export const getters = {
   entries: (state) => {
+    if (state.applyFilter) {
+      return state.entries.filter((entry) =>
+        entry.content['#text']
+          .toLowerCase()
+          .includes(state.filter.toLowerCase())
+      )
+    }
     return state.entries
   },
 }
@@ -30,9 +43,7 @@ export const actions = {
     commit('setEntries', entries)
   },
   async setReadLater({ commit }, data) {
-    console.log('Calling set read later store')
     await api.addToReadLater(data.handle, data.entryId)
-    console.log('After api call')
     commit('removeEntry', data.entryId)
   },
 }

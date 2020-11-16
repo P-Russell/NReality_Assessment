@@ -5,8 +5,8 @@
         <div class="text-center">
           <h1>Welcome to GitHubber</h1>
           <p class="lead text-muted">
-            Enter a users GitHub handle and see their GitHub homepage feed. It's
-            Awesome!
+            Enter a user's GitHub handle and see their GitHub homepage feed.
+            It's Awesome!
           </p>
         </div>
         <div>

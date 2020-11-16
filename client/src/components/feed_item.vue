@@ -5,7 +5,7 @@
       v-html="entry.content['#text']"
     />
     <div v-if="error" class="text-danger ml-3">{{ error }}</div>
-    <div class="p-3">
+    <div v-if="!hideReadLater" class="p-3">
       <button
         type="button"
         class="btn btn-primary float-right read-later-button"
@@ -37,6 +37,11 @@ export default {
     entry: {
       type: Object,
       required: true,
+    },
+  },
+  computed: {
+    hideReadLater() {
+      return this.$route.name === 'feed-read_later'
     },
   },
   methods: {

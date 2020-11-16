@@ -10,16 +10,16 @@
           <li class="nav-item">
             <NuxtLink
               class="nav-link"
-              :class="{ active: this.$route.name === 'feed-current' }"
-              :to="`/${this.$route.params.feed}/current`"
+              :class="{ active: $route.name === 'feed-current' }"
+              :to="`/${$route.params.feed}/current`"
               >Current</NuxtLink
             >
           </li>
           <li class="nav-item">
             <NuxtLink
               class="nav-link"
-              :class="{ active: this.$route.name === 'feed-read_later' }"
-              :to="`/${this.$route.params.feed}/read_later`"
+              :class="{ active: $route.name === 'feed-read_later' }"
+              :to="`/${$route.params.feed}/read_later`"
               >Read Later List</NuxtLink
             >
           </li>
@@ -29,14 +29,28 @@
         </b-navbar-nav>
 
         <b-navbar-nav class="ml-auto">
-          <b-nav-form>
+          <b-nav-form @submit.prevent>
             <b-form-input
+              v-model="filter"
               size="sm"
               class="mr-sm-2"
               placeholder="Search Feed"
             ></b-form-input>
-            <b-button size="sm" class="my-2 my-sm-0" type="submit"
+            <b-button
+              v-if="!$store.state.applyFilter"
+              size="sm"
+              class="my-2 my-sm-0 search-button"
+              type="submit"
+              @click="applyFilter"
               >Search</b-button
+            >
+            <b-button
+              v-else
+              size="sm"
+              class="my-2 my-sm-0 search-button"
+              type="submit"
+              @click="clearFilter"
+              >Clear Search</b-button
             >
           </b-nav-form>
         </b-navbar-nav>
@@ -48,7 +62,39 @@
 <script>
 export default {
   name: 'NavBar',
+  computed: {
+    filter: {
+      get() {
+        return this.$store.state.filter
+      },
+      set(v) {
+        return this.$store.commit('setFilter', v)
+      },
+    },
+  },
+  methods: {
+    applyFilter() {
+      if (this.filter) {
+        this.$store.commit('setApplyFilter', true)
+      }
+    },
+    clearFilter() {
+      this.$store.commit('setApplyFilter', false)
+      this.$store.commit('setFilter', null)
+    },
+  },
+  watch: {
+    filter() {
+      if (!this.filter) {
+        this.$store.commit('setApplyFilter', false)
+      }
+    },
+  },
 }
 </script>
 
-<style></style>
+<style>
+.search-button {
+  width: 7rem;
+}
+</style>
