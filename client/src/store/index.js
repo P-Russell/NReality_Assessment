@@ -25,7 +25,7 @@ export const mutations = {
 
 export const getters = {
   entries: (state) => {
-    if (state.applyFilter) {
+    if (state.applyFilter && state.entries !== '__LOADING__') {
       return state.entries.filter((entry) =>
         entry.content['#text']
           .toLowerCase()
